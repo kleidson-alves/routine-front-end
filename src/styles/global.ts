@@ -12,4 +12,8 @@ export default createGlobalStyle`
       font-family: 'Vidaloka', serif;
       font-size: 18px;
     }
+
+    button {
+      cursor: pointer;
+    }
 `;
