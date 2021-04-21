@@ -3,9 +3,11 @@ import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 
-import getValidationError from '../../utils/getValidationErrors';
+import { useAuth } from '../../hooks/useAuth';
 
 import { Container, Content, Background, AnimationContainer } from './styles';
+
+import getValidationError from '../../utils/getValidationErrors';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -18,27 +20,32 @@ interface Credentials {
 }
 
 const SignIn: React.FC = () => {
+  const { signIn } = useAuth();
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = useCallback(async (data: Credentials) => {
-    try {
-      formRef.current?.setErrors({});
-      const squema = Yup.object({
-        email: Yup.string()
-          .email('Email inválido')
-          .required('Email obrigatório'),
-        password: Yup.string().required('Senha obrigatória'),
-      });
+  const handleSubmit = useCallback(
+    async (data: Credentials) => {
+      try {
+        formRef.current?.setErrors({});
+        const squema = Yup.object({
+          email: Yup.string()
+            .email('Email inválido')
+            .required('Email obrigatório'),
+          password: Yup.string().required('Senha obrigatória'),
+        });
 
-      await squema.validate(data, {
-        abortEarly: false,
-      });
-    } catch (err) {
-      const validationsErrors = getValidationError(err);
+        await squema.validate(data, {
+          abortEarly: false,
+        });
 
-      formRef.current?.setErrors(validationsErrors);
-    }
-  }, []);
+        signIn(data);
+      } catch (err) {
+        const validationsErrors = getValidationError(err);
+        formRef.current?.setErrors(validationsErrors);
+      }
+    },
+    [signIn],
+  );
 
   return (
     <Container>
