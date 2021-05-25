@@ -2,8 +2,10 @@ import React, { useCallback, useRef } from 'react';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
+import { Link } from 'react-router-dom';
 
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
 
 import { Container, Content, Background, AnimationContainer } from './styles';
 
@@ -21,6 +23,7 @@ interface Credentials {
 
 const SignIn: React.FC = () => {
   const { signIn } = useAuth();
+  const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = useCallback(
@@ -38,13 +41,23 @@ const SignIn: React.FC = () => {
           abortEarly: false,
         });
 
-        signIn(data);
+        await signIn(data);
       } catch (err) {
-        const validationsErrors = getValidationError(err);
-        formRef.current?.setErrors(validationsErrors);
+        if (err instanceof Yup.ValidationError) {
+          const validationsErrors = getValidationError(err);
+          formRef.current?.setErrors(validationsErrors);
+
+          return;
+        }
+
+        addToast({
+          title: 'API desconectada!',
+          description: 'Não foi possível se conectar a API por causa do Lucas',
+          type: 'error',
+        });
       }
     },
-    [signIn],
+    [signIn, addToast],
   );
 
   return (
@@ -53,17 +66,12 @@ const SignIn: React.FC = () => {
         <AnimationContainer>
           <img src={logo} alt="Routine" />
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <Input
-              name="email"
-              type="email"
-              placeholder="Email"
-              autoComplete="off"
-            />
+            <Input name="email" type="email" placeholder="Email" />
             <Input name="password" type="password" placeholder="Senha" />
             <Button type="submit">ENTRAR</Button>
           </Form>
 
-          <a href="signup">Registre-se grátis</a>
+          <Link to="/signup">Registre-se grátis</Link>
         </AnimationContainer>
       </Content>
       <Background />

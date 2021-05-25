@@ -2,8 +2,10 @@ import React, { useCallback, useRef } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
+import { Link, useHistory } from 'react-router-dom';
 
 import getValidationErrors from '../../utils/getValidationErrors';
+import { useAuth } from '../../hooks/auth';
 
 import { Container, Content, AnimationContainer, Background } from './styles';
 
@@ -11,32 +13,60 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 import logo from '../../assets/logo.svg';
+import { useToast } from '../../hooks/toast';
+
+interface Credentials {
+  email: string;
+  password: string;
+}
 
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { signUp } = useAuth();
+  const { addToast } = useToast();
+  const history = useHistory();
 
-  const handleSubmit = useCallback(async (data: any) => {
-    try {
-      formRef.current?.setErrors({});
-      const schema = Yup.object().shape({
-        email: Yup.string()
-          .required('Email obrigatório')
-          .email('Email inválido  '),
-        password: Yup.string().min(6, 'Mínimo 6 dígitos'),
-        confirm: Yup.string().oneOf(
-          [Yup.ref('password'), null],
-          'A senha deve ser igual',
-        ),
-      });
+  const handleSubmit = useCallback(
+    async (data: Credentials) => {
+      try {
+        formRef.current?.setErrors({});
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('Email obrigatório')
+            .email('Email inválido  '),
+          password: Yup.string().min(6, 'Mínimo 6 dígitos'),
+          confirm: Yup.string().oneOf(
+            [Yup.ref('password'), null],
+            'A senha deve ser igual',
+          ),
+        });
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
-    } catch (err) {
-      const validationErrors = getValidationErrors(err);
-      formRef.current?.setErrors(validationErrors);
-    }
-  }, []);
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        await signUp(data);
+        history.push('/');
+        addToast({
+          title: 'Cadastro realizado com sucesso!',
+          description: 'Você já pode fazer o seu login',
+          type: 'success',
+        });
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const validationErrors = getValidationErrors(err);
+          formRef.current?.setErrors(validationErrors);
+          return;
+        }
+        addToast({
+          title: 'API desconectada!',
+          description: 'Não foi possível se conectar a API por causa do Lucas',
+          type: 'error',
+        });
+      }
+    },
+    [signUp],
+  );
 
   return (
     <Container>
@@ -45,12 +75,7 @@ const SignUp: React.FC = () => {
         <AnimationContainer>
           <img src={logo} alt="Routine" />
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <Input
-              name="email"
-              type="email"
-              placeholder="Email"
-              autoComplete="off"
-            />
+            <Input name="email" type="email" placeholder="Email" />
             <Input
               name="password"
               type="password"
@@ -66,7 +91,7 @@ const SignUp: React.FC = () => {
             <Button type="submit">CADASTRAR</Button>
           </Form>
 
-          <a href="/">Já estou cadastrado</a>
+          <Link to="/">Já estou cadastrado</Link>
         </AnimationContainer>
       </Content>
     </Container>
