@@ -33,8 +33,7 @@ const AuthProvider: React.FC = ({ children }) => {
   });
 
   const signIn = useCallback(async (credentials: Credentials) => {
-    alert('Muito bem');
-    setData({ token: '123', user: { name: 'kleidson' } });
+    setData({ user: { name: 'Kleidson' }, token: '123' });
     return;
     const response = await api.post('/sections', credentials);
     const { user, token } = response.data;
@@ -49,9 +48,10 @@ const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signOut = useCallback(() => {
+    setData({} as userData);
+    return;
     localStorage.removeItem('@Routine:user');
     localStorage.removeItem('@Routine:token');
-    setData({} as userData);
   }, []);
 
   return (

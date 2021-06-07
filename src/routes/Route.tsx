@@ -18,12 +18,11 @@ const Route: React.FC<RouteProps> = ({
   ...rest
 }) => {
   const { user } = useAuth();
-
   return (
     <ReactDOMRoute
       {...rest}
       render={({ location }) => {
-        return isPrivate === !user ? (
+        return isPrivate === !!user ? (
           <Component />
         ) : (
           <Redirect
