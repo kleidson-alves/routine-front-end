@@ -36,6 +36,7 @@
       "no-unused-expressions":"off",
       "@typescript-eslint/ban-types": "off",
       "react/no-array-index-key": "off",
+      "camelcase": "off",
       "import/extensions": [
         "error",
         "ignorePackages",

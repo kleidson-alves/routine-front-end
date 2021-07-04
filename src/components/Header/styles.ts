@@ -5,23 +5,39 @@ export const Container = styled.div`
   width: 100%;
   height: 80px;
   position: fixed;
-  z-index: 10;
+  z-index: 1;
 `;
-export const Menu = styled.ul`
-  margin: 0 auto;
-  width: 1600px;
+export const Menu = styled.div`
+  display: flex;
+  flex: 1;
+  height: 100%;
+  width: 1430px;
 
+  align-items: center;
   text-align: right;
-  list-style-type: none;
+  div {
+    flex: 1;
+    margin-right: 15px;
+    line-height: 25px;
+    color: #fff;
+  }
+
+  div span {
+    font-weight: bold;
+  }
 
   svg {
-    margin-top: 15px;
     color: #fff;
   }
 
   button {
-    margin-right: 25px;
     background: transparent;
     border: none;
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
   }
 `;
