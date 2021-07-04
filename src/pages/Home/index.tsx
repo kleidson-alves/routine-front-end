@@ -1,21 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../../components/NavBar';
 import Header from '../../components/Header';
-import CurrentRoutine from '../NewRoutine';
 
-import { useAuth } from '../../hooks/auth';
-
-import { Container } from './styles';
+import { Container, Routines } from './styles';
 
 const Home: React.FC = () => {
-  const { user } = useAuth();
-  console.log(user);
+  const [currentRoutine, setCurrentRoutine] = useState();
   return (
     <>
-      <Navbar />
       <Header />
+      <Navbar />
       <Container>
-        <CurrentRoutine />
+        <Routines />
       </Container>
     </>
   );

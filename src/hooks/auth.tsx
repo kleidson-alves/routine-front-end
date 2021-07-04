@@ -2,54 +2,67 @@ import React, { createContext, useCallback, useContext, useState } from 'react';
 import api from '../services/api';
 
 interface userData {
-  user: object;
+  id: string;
+  name: string;
+  avatar_url: string;
+}
+
+interface AuthState {
+  user: userData;
   token: string;
 }
 
-interface Credentials {
+interface signInCredentials {
+  email: string;
+  password: string;
+}
+
+interface signUpCredentials {
+  name: string;
   email: string;
   password: string;
 }
 
 interface AuthContextData {
-  user: object;
-  signIn(credentials: Credentials): Promise<void>;
-  signUp(credential: Credentials): Promise<void>;
+  user: userData;
+  signIn(credentials: signInCredentials): Promise<void>;
+  signUp(credential: signUpCredentials): Promise<void>;
   signOut(): void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
-  const [data, setData] = useState<userData>(() => {
+  const [data, setData] = useState<AuthState>(() => {
     const token = localStorage.getItem('@Routine:token');
     const user = localStorage.getItem('@Routine:user');
 
     if (token && user) {
+      api.defaults.headers.authorization = `Bearer ${token}`;
       return { token, user: JSON.parse(user) };
     }
 
-    return {} as userData;
+    return {} as AuthState;
   });
 
-  const signIn = useCallback(async (credentials: Credentials) => {
-    setData({ user: { name: 'Kleidson' }, token: '123' });
-    return;
-    const response = await api.post('/sections', credentials);
+  const signIn = useCallback(async ({ email, password }) => {
+    const response = await api.post('sessions', { email, password });
     const { user, token } = response.data;
     localStorage.setItem('@Routine:user', JSON.stringify(user));
     localStorage.setItem('@Routine:token', token);
     setData({ token, user });
   }, []);
 
-  const signUp = useCallback(async (credentials: Credentials) => {
-    return;
-    const response = await api.post('/users', credentials);
+  const signUp = useCallback(async ({ name, email, password }) => {
+    const response = await api.post('/users', {
+      name,
+      email,
+      password,
+    });
   }, []);
 
   const signOut = useCallback(() => {
-    setData({} as userData);
-    return;
+    setData({} as AuthState);
     localStorage.removeItem('@Routine:user');
     localStorage.removeItem('@Routine:token');
   }, []);
