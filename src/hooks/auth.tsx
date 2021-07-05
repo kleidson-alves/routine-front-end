@@ -1,14 +1,15 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import api from '../services/api';
 
-interface userData {
+interface UserData {
   id: string;
   name: string;
-  avatar_url: string;
+  avatar: string;
+  email: string;
 }
 
 interface AuthState {
-  user: userData;
+  user: UserData;
   token: string;
 }
 
@@ -24,10 +25,11 @@ interface signUpCredentials {
 }
 
 interface AuthContextData {
-  user: userData;
+  user: UserData;
   signIn(credentials: signInCredentials): Promise<void>;
   signUp(credential: signUpCredentials): Promise<void>;
   signOut(): void;
+  updateUser(user: UserData): void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -67,8 +69,22 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem('@Routine:token');
   }, []);
 
+  const updateUser = useCallback(
+    (user: UserData) => {
+      localStorage.setItem('@Routine:user', JSON.stringify(user));
+
+      setData({
+        token: data.token,
+        user,
+      });
+    },
+    [setData, data.token],
+  );
+
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signUp, signOut }}>
+    <AuthContext.Provider
+      value={{ user: data.user, signIn, signUp, signOut, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

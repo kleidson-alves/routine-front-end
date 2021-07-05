@@ -41,7 +41,7 @@ const SignIn: React.FC = () => {
           abortEarly: false,
         });
 
-        await signIn(data);
+        await signIn({ email: data.email, password: data.password });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const validationsErrors = getValidationError(err);
@@ -49,10 +49,8 @@ const SignIn: React.FC = () => {
 
           return;
         }
-
         addToast({
-          title: 'API desconectada!',
-          description: 'Não foi possível se conectar a API por causa do Lucas',
+          title: 'Credenciais incorretas',
           type: 'error',
         });
       }
@@ -68,7 +66,8 @@ const SignIn: React.FC = () => {
           <Form ref={formRef} onSubmit={handleSubmit}>
             <Input name="email" type="email" placeholder="Email" />
             <Input name="password" type="password" placeholder="Senha" />
-            <Button type="submit">ENTRAR</Button>
+            <Button type="submit">Entrar</Button>
+            <Link to="forgot">Esqueci minha senha</Link>
           </Form>
 
           <Link to="/signup">Registre-se grátis</Link>

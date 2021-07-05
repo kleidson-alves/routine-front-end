@@ -28,7 +28,7 @@ export const Container = styled.div<ContainerProps>`
 
     &::placeholder {
       color: #ffffff;
-      opacity: 0.8;
+      opacity: 0.6;
     }
   }
 `;

@@ -1,84 +1,51 @@
-import React, { useState } from 'react';
-import { FiClock, FiSettings } from 'react-icons/fi';
+import React, { useCallback } from 'react';
+import { Form } from '@unform/web';
+import { useHistory } from 'react-router-dom';
+import { FiArrowLeft } from 'react-icons/fi';
+
+import Header from '../../components/Header';
+
+import { Container, Content, Title } from './styles';
 import Button from '../../components/Button';
+import { useRoutine } from '../../hooks/routine';
+import { useAuth } from '../../hooks/auth';
+import Input from '../../components/Input';
 
-import Label from '../../components/Label';
+const NewRoutine: React.FC = () => {
+  const history = useHistory();
+  const { user } = useAuth();
+  const { addRoutine } = useRoutine();
 
-import {
-  Container,
-  Content,
-  Table,
-  Title,
-  Header,
-  Time,
-  ButtonContent,
-} from './styles';
-
-const Home: React.FC = () => {
-  const [items, setItems] = useState<string[]>(['', '', '', '', '', '', '']);
-  const [hours, setHours] = useState<string[]>([
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-  ]);
+  const handleCreateRoutine = useCallback(
+    async event => {
+      await addRoutine({
+        routine_id: user.id,
+        routine_name: 'Kleidson',
+        date: new Date(),
+      });
+    },
+    [addRoutine, user.id],
+  );
   return (
     <Container>
+      <Header />
+      <button type="button" onClick={() => history.goBack()}>
+        <FiArrowLeft size={30} />
+      </button>
       <Content>
-        <Table>
+        <Form onSubmit={handleCreateRoutine}>
           <Title>
-            <Label />
+            <Input
+              name="routine_name"
+              type="text"
+              placeholder="Nome da rotina"
+            />
           </Title>
-          <FiSettings size={50} />
-          <ul>
-            <thead>
-              <Time>
-                <FiClock size={30} />
-              </Time>
-              <Header>SEGUNDA</Header>
-              <Header>TERÇA</Header>
-              <Header>QUARTA</Header>
-              <Header>QUINTA</Header>
-              <Header>SEXTA</Header>
-              <Header>SÁBADO</Header>
-              <Header>DOMINGO</Header>
-            </thead>
-            <tbody>
-              {hours.map((hour, index) => (
-                <tr>
-                  <Time>
-                    <p>{index + 6}</p>
-                  </Time>
-                  {items.map((item, id) => (
-                    <td>
-                      <Label key={id} value={item} />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </ul>
-        </Table>
+          <Button type="submit">Salvar</Button>
+        </Form>
       </Content>
-      <ButtonContent>
-        <Button>SALVAR</Button>
-      </ButtonContent>
     </Container>
   );
 };
 
-export default Home;
+export default NewRoutine;

@@ -11,6 +11,7 @@ export default createGlobalStyle`
     body, input, button{
       font-family: 'Vidaloka', serif;
       font-size: 18px;
+
     }
 
     button {

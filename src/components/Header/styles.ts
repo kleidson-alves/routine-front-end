@@ -15,19 +15,16 @@ export const Menu = styled.div`
 
   align-items: center;
   text-align: right;
-  div {
+
+  > div {
     flex: 1;
     margin-right: 15px;
     line-height: 25px;
     color: #fff;
-  }
 
-  div span {
-    font-weight: bold;
-  }
-
-  svg {
-    color: #fff;
+    > span {
+      font-weight: bold;
+    }
   }
 
   button {
@@ -40,4 +37,13 @@ export const Menu = styled.div`
     height: 50px;
     border-radius: 50%;
   }
+`;
+
+export const DefaultUser = styled.div`
+  color: #fff;
+  text-transform: uppercase;
+
+  border: 2px solid #fff;
+  border-radius: 50%;
+  padding: 10px;
 `;

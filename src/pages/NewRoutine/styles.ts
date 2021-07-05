@@ -1,77 +1,48 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  align-items: center;
-  justify-content: center;
+  > button {
+    color: #fff;
+    position: fixed;
+    left: 7%;
+    z-index: 10;
+    top: 20px;
+    border: none;
+    background: transparent;
+  }
 `;
 
 export const Content = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-`;
+  padding-top: 120px;
 
-export const Table = styled.div`
-  display: flex;
-  flex-direction: column;
+  form {
+    width: 700px;
+    height: 600px;
 
-  margin-top: 50px;
-  align-items: center;
-
-  border: solid #007dd7 2px;
-  border-radius: 50px 50px 0 0;
-
-  position: relative;
-  > svg {
-    margin: 20px 20px 20px 0;
-    color: #007dd7;
-    align-self: flex-end;
+    margin: 0 auto;
+    text-align: center;
   }
 `;
 
 export const Title = styled.div`
-  position: absolute;
-  top: -35px;
+  > div {
+    border-width: 0 0 2px 0;
+    margin: 0 auto;
+    justify-content: center;
 
-  div {
-    border-radius: 10px;
-    background-color: #fff;
+    width: 60%;
+    margin-bottom: 40px;
+
+    input {
+      color: #000;
+      font-size: 36px;
+      padding: 20px;
+      text-align: center;
+
+      ::placeholder {
+        color: #000;
+        opacity: 0.4;
+      }
+    }
   }
-  input {
-    font-family: 'Roboto Condensed', serif;
-    font-size: 36px;
-    text-transform: uppercase;
-  }
-
-  width: 482px;
-  height: 60px;
-  left: 495px;
-`;
-
-export const Time = styled.div`
-  display: flex;
-  border: 2px solid;
-  border-color: #007dd7;
-  height: 60px;
-  width: 60px;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const Header = styled.th`
-  border: 2px solid;
-  border-color: #007dd7;
-  height: 60px;
-`;
-
-export const ButtonContent = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  > button {
-    max-width: 400px;
-  }
-
-  margin-bottom: 100px;
 `;

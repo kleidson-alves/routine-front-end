@@ -16,6 +16,7 @@ import logo from '../../assets/logo.svg';
 import { useToast } from '../../hooks/toast';
 
 interface Credentials {
+  name: string;
   email: string;
   password: string;
 }
@@ -45,7 +46,11 @@ const SignUp: React.FC = () => {
           abortEarly: false,
         });
 
-        await signUp(data);
+        await signUp({
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        });
         history.push('/');
         addToast({
           title: 'Cadastro realizado com sucesso!',
@@ -75,6 +80,7 @@ const SignUp: React.FC = () => {
         <AnimationContainer>
           <img src={logo} alt="Routine" />
           <Form ref={formRef} onSubmit={handleSubmit}>
+            <Input name="name" type="text" placeholder="Nome" />
             <Input name="email" type="email" placeholder="Email" />
             <Input
               name="password"
